@@ -1,6 +1,10 @@
 import { serve } from 'https://deno.land/std@0.210.0/http/server.ts';
 import { Server } from 'https://deno.land/x/socket_io@0.2.0/mod.ts';
 
+const isProduction = Deno.env.get('isProduction') === 'true';
+
+console.log('isProduction', isProduction);
+
 const io = new Server({
   cors: {
     origin: ['https://erd-editor.io'],
@@ -31,5 +35,5 @@ io.on('connection', socket => {
 });
 
 await serve(io.handler(), {
-  port: 3000,
+  port: isProduction ? 80 : 3000,
 });
