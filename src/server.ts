@@ -9,12 +9,24 @@ const io = new Server({
 });
 
 io.on('connection', socket => {
-  console.log(`socket ${socket.id} connected`);
+  socket.on('join-room', roomId => {
+    socket.join(roomId);
+  });
 
-  socket.emit('hello', { message: 'hello' });
+  socket.on('request-host-schema', roomId => {
+    socket.to(roomId).emit('request-host-schema', roomId);
+  });
 
-  socket.on('disconnect', reason => {
-    console.log(`socket ${socket.id} disconnected due to ${reason}`);
+  socket.on('host-schema', ({ roomId, value }) => {
+    socket.to(roomId).emit('host-schema', value);
+  });
+
+  socket.on('dispatch', ({ roomId, value }) => {
+    socket.to(roomId).emit('dispatch', value);
+  });
+
+  socket.on('disconnect', () => {
+    // TODO: host check
   });
 });
 
