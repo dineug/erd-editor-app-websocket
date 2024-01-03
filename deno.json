@@ -1,5 +1,9 @@
 {
   "tasks": {
     "dev": "deno run --watch --allow-net --allow-env src/server.ts"
+  },
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["dom", "deno.unstable"]
   }
 }
