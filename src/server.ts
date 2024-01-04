@@ -51,14 +51,20 @@ io.on('connection', socket => {
   });
 
   socket.on('request-host-schema', roomId => {
-    socket.to(roomId).emit('request-host-schema', roomId);
-    dispatch({ to: roomId, eventName: 'request-host-schema', value: roomId });
-  });
-
-  socket.on('host-schema', ({ roomId, value }) => {
-    socket.to(roomId).emit('host-schema', { roomId, value });
+    socket
+      .to(roomId)
+      .emit('request-host-schema', { roomId, socketId: socket.id });
     dispatch({
       to: roomId,
+      eventName: 'request-host-schema',
+      value: { roomId, socketId: socket.id },
+    });
+  });
+
+  socket.on('host-schema', ({ roomId, socketId, value }) => {
+    socket.to(socketId).emit('host-schema', { roomId, value });
+    dispatch({
+      to: socketId,
       eventName: 'host-schema',
       value: { roomId, value },
     });
